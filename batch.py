@@ -9,7 +9,9 @@ def main(seed: int, N: int, B: float, T: float, iterations: int, save_folder: Pa
     np.random.seed(seed)
     model = TwoSpinSpherical(N, B, T)
     H_array, m_array = model.flip_many_times(iterations)
-    with open(save_folder / f'{N}_{B}_{T}.json', 'w') as f:
+    save_file = save_folder / f'{N}_{B}_{T}' / f"{seed}.json"
+    save_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(save_file, 'w') as f:
         data = dict(m_init=m_array[0], m_final=m_array[-1],
                     H_init=H_array[0], H_final=H_array[-1])
         json.dump(data, f)

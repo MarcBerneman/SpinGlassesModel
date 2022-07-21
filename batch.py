@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def main(seed: int, N: int, B: float, T: float, iterations: int, save_folder: Path):
-    save_file = save_folder / f'{N}_{B}_{T}' / f"{seed}.json"
+    save_file = save_folder / f'{N}_{B}_{T}_{iterations}' / f"{seed}.json"
     if save_file.exists():
         return
     save_file.parent.mkdir(parents=True, exist_ok=True)

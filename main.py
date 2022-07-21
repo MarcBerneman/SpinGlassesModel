@@ -1,14 +1,10 @@
 import numpy as np
-
-from TwoSpin import TwoSpin
+from TwoSpin import TwoSpinDiscrete, TwoSpinSpherical
 import matplotlib.pyplot as plt
 
 
-def singleTsingleB(T, B):
-    N = 100
-    model = TwoSpin(N, T=T, B=B)
-    H_array, m_array = model.flip_many_times(1000)
-
+def singleTsingleB(model, times=1000):
+    H_array, m_array = model.flip_many_times(times)
     fig, ax = plt.subplots(2, 1)
     ax[0].plot(m_array)
     ax[0].set_ylim(-1.1, 1.1)
@@ -18,14 +14,12 @@ def singleTsingleB(T, B):
     plt.show()
 
 
-def varyB(T, B_array):
-    N = 100
-    model = TwoSpin(N, T=T, B=0)
+def varyB(model, B_array, times=1000):
     H_array = np.zeros_like(B_array)
     m_array = np.zeros_like(B_array)
     for i, B in enumerate(B_array):
         model.B = B
-        __H_array, __m_array = model.flip_many_times(1000)
+        __H_array, __m_array = model.flip_many_times(times)
         H_array[i] = __H_array[-1]
         m_array[i] = __m_array[-1]
 
@@ -36,14 +30,12 @@ def varyB(T, B_array):
     plt.show()
 
 
-def varyT(B, T_array):
-    N = 100
-    model = TwoSpin(N, T=0.0, B=B)
+def varyT(model, T_array, times=1000):
     H_array = np.zeros_like(T_array)
     m_array = np.zeros_like(T_array)
     for i, T in enumerate(T_array):
         model.setT(T)
-        __H_array, __m_array = model.flip_many_times(1000)
+        __H_array, __m_array = model.flip_many_times(times)
         H_array[i] = __H_array[-1]
         m_array[i] = __m_array[-1]
 
@@ -55,10 +47,17 @@ def varyT(B, T_array):
 
 
 if __name__ == '__main__':
-    # singleTsingleB(0.01, 0.1)
+    np.random.seed(0)
+    N = 100
+    T = 1.0
+    B = 0.0
+    model_ = TwoSpinSpherical(N=N, T=T, B=B)
+    singleTsingleB(model_, 10000)
 
     # B_array = np.concatenate((np.linspace(-2, 2, 20), np.linspace(2, -2, 20)))
-    # varyB(0.0, B_array)
+    # varyB(model_(N=N, T=T, B=B), B_array)
 
-    T_array = np.concatenate((np.linspace(0, 4, 20), np.linspace(4, 0, 20)))
-    varyT(0.0, T_array)
+    # model_.B = 0.0
+    # T_array = np.concatenate((np.linspace(0, 4, 20), np.linspace(4, 0, 20))) / 4
+    # varyT(model_, T_array, 1000)
+    # singleTsingleB(model_, 20000)

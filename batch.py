@@ -15,9 +15,12 @@ def main(seed: int, N: int, B: float, T: float, iterations: int, save_folder: Pa
     model = TwoSpinSpherical(N, B, T)
     H_array, m_array = model.flip_many_times(iterations)
 
+    indices = np.linspace(-1, iterations-1, 11).round().astype(int)
+    indices[0] = 0
     with open(save_file, 'w') as f:
-        data = dict(m_init=m_array[0], m_final=m_array[-1],
-                    H_init=H_array[0], H_final=H_array[-1])
+        data = dict(indices=indices, m=m_array[indices], H=H_array[indices])
+        for key in data.keys():
+            data[key] = data[key].tolist()
         json.dump(data, f)
 
 

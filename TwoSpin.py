@@ -31,6 +31,11 @@ class TwoSpin:
         self._A = self._J * (np.ones(N) - np.eye(N))
         self.s = np.ones(shape=(N, 1))
 
+    def setRandomCoupling(self, J):
+        self._A = np.triu(np.random.randn(self._N, self._N) * J / np.sqrt(self._N),1)
+        self._A += self._A.transpose()  # make the matrix symmetric
+        self._A *= 0.5  # account for double counting
+
 
 class TwoSpinDiscrete(TwoSpin):
     def __init__(self, N: int, B: float = 0.0, T: float = 0.0):
